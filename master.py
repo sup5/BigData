@@ -212,17 +212,20 @@ def duel_effectiveness(dt):
 	w=0				
 	n=0
 	los=0
+	tags=[]
 	#d_duel={}
 	global duel
 	duel+=1
+	for j in dt["tags"]:
+		tags.append(j["id"])
 	#if dt["eventId"]==1:
-	for i in dt["tags"]:				
-		if(i["id"]==701):
-			los+=1	 
-		if(i["id"]==702):
-			n+=1
-		if(i["id"]==703):
-			w+=1
+	#for i in dt["tags"]:				
+	if(701 in tags):
+		los+=1	 
+	if(702 in tags):
+		n+=1
+	if(703 in tags):
+		w+=1
 						#to avoid zero division error
 	duel_effective=(w+(n*0.5))/(w+1+n+los)				#storing values in the dictionary
 	try:
@@ -241,22 +244,26 @@ def free_kick(dt):
 	non_pen1=0
 	ineff=0
 	non_pen2=0
+	tags=[]
 	#d_free={}
 	#free+=1	
 	#if dt["eventId"]==3:
-	for i in dt["tags"]:				
-		if i["id"]==1802:
-			if (dt["subEventId"]==35):
-				ineff+=1
-			if (dt["subEventId"]!=35):
-				non_pen2+=1
-		if i["id"]==1801:
-			if((dt["subEventId"]==35) and (i["id"]==101)):
-				pen+=1
-			if(dt["subEventId"]==35)and(i["id"]!=101):
-				eff+=1
-			if(dt["subEventId"]!=35):
-				non_pen1+=1
+	for j in dt["tags"]:
+		tags.append(j["id"])
+	
+	#for i in dt["tags"]:				
+	if 1802 in tags:
+		if (dt["subEventId"]==35):
+			ineff+=1
+		if (dt["subEventId"]!=35):
+			non_pen2+=1
+	if 1801 in tags:
+		if((dt["subEventId"]==35) and(101 in tags)):
+			pen+=1
+		if(dt["subEventId"]==35)and(101 not in tags):
+			eff+=1
+		if(dt["subEventId"]!=35):
+			non_pen1+=1
 					
 	free_effective=((eff+pen+non_pen1)+pen)/(ineff+non_pen2+1+(eff+pen+non_pen1))
 					
@@ -276,19 +283,22 @@ def shots(dt):
 	t1=0
 	t2=0
 	t3=0
+	tags=[]
 	#d_shots={}
 	#if dt["eventId"]==10:
-	for i in dt["tags"]:
-		if(i["id"]==1801):
-			t1+=1
-		if(i["id"]==1802):
-			t2+=1
-		if(i["id"]==101):
-			t3+=1
-		if(i["id"]==1801) and(i["id"]==101):
-			tar_goal+=1
-		if(i["id"]==1801)and (i["id"]!=101):
-			tar_not+=1
+	for j in dt["tags"]:
+		tags.append(j["id"])
+	#for i in dt["tags"]:
+	if(1801 in tags):
+		t1+=1
+	if(1802 in tags):
+		t2+=1
+	if(101 in tags):
+		t3+=1
+	if(1801 in tags) and(101 in tags):
+		tar_goal+=1
+	if(1801 in tags)and (101 not in tags):
+		tar_not+=1
 					
 	shots=((tar_goal+(tar_not*0.5)))/(t1+t2+t3+1)
 					
